@@ -1,7 +1,7 @@
 #!/usr/bin/python/
 
 import datetime
-import ImageGrab
+#import ImageGrab
 import gameUtilities
 import JamGame
 import JamPlayer
@@ -25,18 +25,18 @@ class Logger:
 def main():
 
   ############# VARIABLES #################
-  server = JamServer.server()
+  server = JamServer.JamServer()
   log = Logger("jam.log", 3)
   sleepTimeBetweenScreenGrabs = 2.5
   #########################################
   
   while gameUtilities.gameIsStillRunning():
-    gameScreenGrab = ImageGrab.grab()
+    gameScreenGrab = "" # ImageGrab.grab()
     saved = False
   
     if gameUtilities.gameScreenIsStatsScreen(gameScreenGrab):
       log.log("Found Stat Screen. Beginning to parse stats", 3)
-      newGame = JamGame.JamGame(img)  # Creates new game object. game object parses S.S.
+      newGame = JamGame.JamGame(gameScreenGrab)  # Creates new game object. game object parses S.S.
       
       log.log("Adding game to database", 4)
       saved = server.addGameToDatabase(newGame)
@@ -47,10 +47,12 @@ def main():
         log.log("Error saving stats", 5)
     else: #Else, not on the stats page
       time.sleep(sleepTimeBetweenScreenGrabs)
-    
+  
+    break # temporary 'don't-get-stuck-in-an-infinite-loop' fix  
   #End While-Loop
   
-    
+  log.log("Jam exited. Closing process", 2)  
+  
     
 if __name__ == "__main__":
     main()
