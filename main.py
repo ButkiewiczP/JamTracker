@@ -1,11 +1,12 @@
 #!/usr/bin/python/
 
 import datetime
-#import ImageGrab
+import ImageGrab
 import gameUtilities
 import JamGame
 import JamPlayer
 import JamServer
+import OCRTester
 import os
 import time
 
@@ -13,13 +14,13 @@ class Logger:
   def __init__(self, filename, debug_level):
     self.logFilename = filename
     self.logLevel = int(debug_level)
-    self.log("Starting Jam Log on " + datetime.datetime.now().strftime("%D"), 5)
+    self.log("== Starting Jam Log on " + datetime.datetime.now().strftime("%x") + " ==", 5)
 
   def log(self, message, level):
     if level >= self.logLevel:
       tMessage = '[' + datetime.datetime.now().strftime("%H:%M") + '] ' + message 
       with open(self.logFilename, 'a') as logFile:
-        logFile.write(tMessage + '\n')
+        logFile.write(tMessage + '\r\n')
       logFile.close()
 
 def main():
@@ -28,6 +29,11 @@ def main():
   server = JamServer.JamServer()
   log = Logger("jam.log", 3)
   sleepTimeBetweenScreenGrabs = 2.5
+  testImageDir = os.getcwd() + '\\testImages\\'
+  tests = OCRTester.OCRTester(testImageDir)
+  tests.bigTest()
+  asdx = raw_input("press a key")
+  exit()
   #########################################
   
   while gameUtilities.gameIsStillRunning():
