@@ -1,7 +1,10 @@
 #!/usr/bin/python/
 
+#import ImageGrab
 import JamPlayer
 import JamGame
+from ocr.pytesser import *
+
 
 def gameScreenIsStatsScreen(pyImage):
   return True
