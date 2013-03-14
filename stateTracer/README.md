@@ -31,7 +31,6 @@ Example Usage:
 ---------
 Not all options are required. Here are some simple examples
 
-
     $ stateTracer.py -d -s mySave.sta -o myDecompressedSaveFile.dec
     Description: Takes "mySave.sta" and attempts to decompress it into "myDecompressedSaveFile.dec". 
     This also creates a header file named "myDecompressedSaveFile.dec.hdr" which is used later to 
