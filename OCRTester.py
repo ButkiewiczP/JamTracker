@@ -1,6 +1,8 @@
 #!/usr/bin/python
 
-import ImageGrab
+import PIL
+from PIL import Image
+from PIL import ImageOps
 from ocr.pytesser import *
 import os
 
@@ -12,17 +14,24 @@ class OCRTester:
     
   def readDirectory(self, dir):
     for filename in os.listdir(dir):
-      if filename == 'cpu_initials_good.png':
-      #if filename[-4:] == "tiff":
+      if filename != ".DS_Store":
         self.imageArray.append(filename)
       
   def parseImage(self, imageFilename):
     totalFileName = self.testDir + imageFilename
-    im = Image.open(totalFileName)
-    print "PI => " + totalFileName    
-    #r,g,b,a = im.split()
-    #img = Image.merge("RGB", (r,g,b))
-    return image_to_string(im)
+
+    try:
+      im = Image.open(totalFileName)
+      im = PIL.ImageOps.grayscale(im)
+      im = PIL.ImageOps.posterize(im, 1)
+      im = PIL.ImageOps.invert(im)
+      im = PIL.ImageOps.autocontrast(im)
+      im.save(totalFileName)
+      return image_to_string(im)
+    except IOError:
+      print "IO Error"
+      pass
+    
       
   def bigTest(self):
     self.readDirectory(self.testDir)
