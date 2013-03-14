@@ -8,6 +8,15 @@ import stat
 import stateManager
 import sys
 
+# Global Variables
+# Default files to read/write to is the system IO.
+#   Allows piping and redirecting into the script
+inputFile = sys.stdin
+outputFile = sys.stdout
+logFile = sys.stderr
+APP_NAME = 'stateTracer'
+VERSION_STRING = '0.5.0'
+
 # Global Helper Functions
 # Log function. Simplifies writing to the log.
 def log(logString):
@@ -23,15 +32,6 @@ def output(outString):
     except IOError:
         pass
 
-
-
-
-# Default files to read/write to is the system IO.
-#   Allows piping and redirecting into the script
-inputFile = sys.stdin
-outputFile = sys.stdout
-logFile = sys.stderr
-
 # Create parser to handle arguments passed into the script at run time
 parser = argparse.ArgumentParser(description='Process and search MAME save states')
 parser.add_argument('-x', '--hex', help='Encode string to hex', action='store_true', default=False, dest='hex', required=False)
@@ -42,7 +42,16 @@ parser.add_argument('-D', '--Debug', help='Set debug mode to true', action='stor
 parser.add_argument('-s', "--source", dest='input', help="Source file/string (Or use piping/redirect)", default=None, required=False)
 parser.add_argument('-o', "--dest", dest='output', help="Destination file/string (Or use piping/redirect)", default=None, required=False)
 parser.add_argument('-l', "--log", dest='log', help="File to write the log to (Default is STDERR)", default=None, required=False)
+parser.add_argument('-v', '--version', help='Outputs the script version to STDOUT', action='store_true', default=False, dest='version', required=False)
 args = vars(parser.parse_args())
+
+###################################################################
+# Option: -v
+# Outputs the script's version to STDOUT. Cancels all other options
+###################################################################
+if args['version']:
+    output(APP_NAME + "-" + VERSION_STRING + "\n")
+    exit()
 
 #################################################################
 # Option: -l <file>
