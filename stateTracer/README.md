@@ -43,6 +43,8 @@ Not all options are required. Here are some simple examples
 
 Required I/O Switches:
 ----------------------
+The source switch only needs to be specified if the compare (-p) is not being used
+
     Switch: -s <file>  (--source <file>)
     Description: Use this to specify a source file for reading. Usually this is the state file you
     are reading for decompressing/compressing
@@ -65,10 +67,8 @@ Only ONE of the following switches should be used at runtime
     Switch: -x (--hex)
     Description: Use this switch to read the input file and output it as hex
 
-    ** Currently Not Enabled **
     Switch: -p (--compare)
-    Description: Use this switch to search through input files for speciic hex values, and then 
-    intersect the sets to find common offsets
+    Description: Use this switch to add a file to a list of files to do byte-comparing on.
 
 Optional Switches:
 ------------------
@@ -93,6 +93,8 @@ This code is distributed under the terms and conditions of the MIT license.
 Change-log
 ==========
 
+- Version 0.5.1 on 3/14/2013
+    + Added compare support back in to script
 - **StateTracer Version 0.5** on 03/14/2013
     + Made StateTracer its own project.
     + Added Compression/Decompression Support

@@ -15,7 +15,7 @@ inputFile = sys.stdin
 outputFile = sys.stdout
 logFile = sys.stderr
 APP_NAME = 'stateTracer'
-VERSION_STRING = '0.5.0'
+VERSION_STRING = '0.5.1'
 
 # Global Helper Functions
 # Log function. Simplifies writing to the log.
@@ -35,7 +35,7 @@ def output(outString):
 # Create parser to handle arguments passed into the script at run time
 parser = argparse.ArgumentParser(description='Process and search MAME save states')
 parser.add_argument('-x', '--hex', help='Encode string to hex', action='store_true', default=False, dest='hex', required=False)
-parser.add_argument('-p', '--compare', help='Compare decompressed states for changes in hex', action='store_true', default=False, dest='compare', required=False)
+parser.add_argument('-p', '--compare', help='Add file to collection of files to compare', action='append', default=[], dest='compare', required=False)
 parser.add_argument('-c', '--compress', help='Compress a state for reuse', action='store_true', default=False, dest='compress', required=False)
 parser.add_argument('-d', '--decompress', help='Decompress a save state file', action='store_true', default=False, dest='decompress', required=False)
 parser.add_argument('-D', '--Debug', help='Set debug mode to true', action='store_true', dest='debugMode', required=False)
@@ -157,31 +157,21 @@ if args['compress'] is True:
     log("Compressed save state successfully")
 
 #####################################################################
-# Option: -c
+# Option: -p
 # Compress a previously decompressed save back into a usable state
 #   Adds header data, compresses save data, and writes to file
-# TODO!
 #####################################################################
 if args['compare']:
-    pass
-    states = []    # Holds on to the state objects to compare their sets of matching lines
-    ans = ""    # Holds on to users answer whether to keep searching files
-    while ans is not "n":
-
+    offsetArray = []
+    for f in args['compare']:
+        stateMan = stateManager.stateManager()
         #Read in file, and integer to look for
-        fileN = raw_input("Enter Save-State Filename To Analyze: ")
-        iVal = raw_input("Integer Value To Find: ")
-
-        #Create state
-        newState = gameState(str(fileN), iVal) #int(iVal)) 
-        newSet = set(newState.stateReader.directCompareToState(int(iVal)))
-        states.append(newSet)
-        newState.debug()
-
-        ans = raw_input("Read another state file? (y/n)")
+        iVal = raw_input("Integer Value To Find for file <" + f + ">: ")
+        ofsts = stateMan.offsetsForValue(f, iVal)
+        offsetArray.append(ofsts)
 
     setOfOffsets = set()
-    for s in states:
+    for s in offsetArray:
         if len(setOfOffsets) == 0:
             setOfOffsets = set(s)
         else:

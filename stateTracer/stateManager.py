@@ -1,3 +1,4 @@
+import binascii
 import sys
 import zlib
 
@@ -8,29 +9,29 @@ class stateManager:
 		self.BYTES_TO_READ = 1
 		self.COMPRESSION_LEVEL = 6
 
-	def offsetsForValue(self, data, targetVal, DEBUG=1, offset=0):
-		hexObj = hexObject(targetVal)
-		headerBytes = ""
-		headerText = ""
+	def offsetsForValue(self, fileP, targetVal, offset=0):
+		hexTarget = hex(int(targetVal))[2:]
+
+		if len(hexTarget) < 2:
+			hexTarget = "0" + hexTarget	# make sure byte we're looking for is atleast 2 bytes
+
 		bytesRead = 0
 		offsets = []
+		lastOffset = offset
+		index = 0
 
-		with open(self.stateFilename, "rb") as fp:
-			fp.seek(offset)
-			while True:
-				piece = data[lastOffset:lastOffset+self.BYTES_TO_READ]
+		with open(fileP, "rb") as fp:
+			fp.seek(offset, 0)
+			hexDataToSearch = binascii.hexlify(fp.read())
 
-				if piece == "":
-					break # end of file
-				
-				hexLine = binascii.hexlify(piece).upper()
-				if hexObj.compare(hexLine) is True:
-					offsets.append(bytesRead + offset) 
-	
-				bytesRead = bytesRead + self.BYTES_TO_READ
-				lastOffset = bytesRead + offset
-				#if bytesRead >= 1979701:
-				#	break
+			while index < len(hexDataToSearch):
+				index = hexDataToSearch.find(hexTarget, index)
+				if index == -1:
+					break
+
+				offsets.append(index)
+				index += len(hexTarget)
+
 		fp.close()
 
 		return offsets
