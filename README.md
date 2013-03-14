@@ -18,6 +18,13 @@ This app requires you to install 'Python Imaging Library 1.1.7' for Python 2.7. 
 
 Pytesser requires windows to run the tesserect executable, and the PIL to read images.
 
+------------
+StateTracer
+============
+
+StateTracer is a python script used to decompress and compress MAME save state files. See the
+readMe in the stateTracer folder for more information
+
 -------
 License
 =======
