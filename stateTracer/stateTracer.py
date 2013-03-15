@@ -3,7 +3,6 @@ import argparse
 import binascii
 import hexObject
 import os
-import gameState
 import stat
 import stateManager
 import sys

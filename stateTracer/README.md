@@ -104,6 +104,7 @@ Change-log
 
 - Version 0.6.3 on 3/14/2013
     + A LOT of refactoring!wootwoot
+    + Many, many bug fixes
     + Added compare support back in to script
 - **StateTracer Version 0.5** on 03/14/2013
     + Made StateTracer its own project.
