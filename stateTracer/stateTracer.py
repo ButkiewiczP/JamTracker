@@ -16,7 +16,7 @@ ARG_COMPARE_DEST = "compare"
 ARG_COMPRESS_DEST = "compress"
 ARG_DECOMPRESS_DEST = "decompress"
 ARG_SOURCE_DEST = "input"
-ARG_DEST_DEST = "output"
+ARG_OUTPUT_DEST = "output"
 ARG_DEBUG_DEST = "debugMode"
 ARG_LOG_DEST = "log"
 ARG_VERSION_DEST = "version"
@@ -52,7 +52,7 @@ parser.add_argument('-c', '--compress', help='Compress a state for reuse', actio
 parser.add_argument('-d', '--decompress', help='Decompress a save state file', action='store_true', default=False, dest=ARG_DECOMPRESS_DEST, required=False)
 #I/O Arguments
 parser.add_argument('-s', "--source", dest=ARG_SOURCE_DEST, help="Source file/string (Or use piping/redirect)", default=None, required=False)
-parser.add_argument('-o', "--dest", dest=ARG_DEST_DEST, help="Destination file/string (Or use piping/redirect)", default=None, required=False)
+parser.add_argument('-o', "--dest", dest=ARG_OUTPUT_DEST, help="Destination file/string (Or use piping/redirect)", default=None, required=False)
 #Debug Options
 parser.add_argument('-D', '--Debug', help='Enable log writing to console', action='store_true', dest=ARG_DEBUG_DEST, required=False)
 parser.add_argument('-l', "--log", dest=ARG_LOG_DEST, help="File to write the log to (Default is STDERR)", default=None, required=False)
@@ -103,10 +103,10 @@ else:
 # Handle File Output / stdout
 #
 ###############################
-if args[ARG_DEST_DEST] is not None:
+if args[ARG_OUTPUT_DEST] is not None:
     try:
         log("Destination Exists. Redirecting output to file")
-        outputFile = open(str(args[ARG_DEST_DEST]), 'wb')
+        outputFile = open(str(args[ARG_OUTPUT_DEST]), 'wb')
     except IOError:
         log("No destination file exists, using stdout")
 else:
