@@ -8,12 +8,18 @@ import stateManager
 import sys
 
 # Global Variables
-# Default files to read/write to is the system IO.
-#   Allows piping and redirecting into the script
 APP_NAME = 'stateTracer'
 VERSION_STRING = '0.6.3'
 ARG_HEX_DEST = "hex"
-ARG_HEX_DEST
+ARG_HEXB_DEST = "hexb"
+ARG_COMPARE_DEST = "compare"
+ARG_COMPRESS_DEST = "compress"
+ARG_DECOMPRESS_DEST = "decompress"
+ARG_SOURCE_DEST = "input"
+ARG_DEST_DEST = "output"
+ARG_DEBUG_DEST = "debugMode"
+ARG_LOG_DEST = "log"
+ARG_VERSION_DEST = "version"
 
 #I/O Vars
 inputFile = sys.stdin
@@ -39,25 +45,25 @@ def output(outString):
 # Create parser to handle arguments passed into the script at run time
 parser = argparse.ArgumentParser(description='Process and search MAME save states')
 #Required Arguments
-parser.add_argument('-x', '--hex', help='Encode string to hex', action='store_true', default=False, dest='hex', required=False)
-parser.add_argument('-xb', '--hexb', help='Encode binary string to hex', action='store_true', default=False, dest='hexb', required=False)
-parser.add_argument('-p', '--compare', help='Add file to collection of files to compare', action='append', default=[], dest='compare', required=False)
-parser.add_argument('-c', '--compress', help='Compress a state for reuse', action='store_true', default=False, dest='compress', required=False)
-parser.add_argument('-d', '--decompress', help='Decompress a save state file', action='store_true', default=False, dest='decompress', required=False)
+parser.add_argument('-x', '--hex', help='Encode string to hex', action='store_true', default=False, dest=ARG_HEX_DEST, required=False)
+parser.add_argument('-xb', '--hexb', help='Encode binary string to hex', action='store_true', default=False, dest=ARG_HEXB_DEST, required=False)
+parser.add_argument('-p', '--compare', help='Add file to collection of files to compare', action='append', default=[], dest=ARG_COMPARE_DEST, required=False)
+parser.add_argument('-c', '--compress', help='Compress a state for reuse', action='store_true', default=False, dest=ARG_COMPRESS_DEST, required=False)
+parser.add_argument('-d', '--decompress', help='Decompress a save state file', action='store_true', default=False, dest=ARG_DECOMPRESS_DEST, required=False)
 #I/O Arguments
-parser.add_argument('-s', "--source", dest='input', help="Source file/string (Or use piping/redirect)", default=None, required=False)
-parser.add_argument('-o', "--dest", dest='output', help="Destination file/string (Or use piping/redirect)", default=None, required=False)
+parser.add_argument('-s', "--source", dest=ARG_SOURCE_DEST, help="Source file/string (Or use piping/redirect)", default=None, required=False)
+parser.add_argument('-o', "--dest", dest=ARG_DEST_DEST, help="Destination file/string (Or use piping/redirect)", default=None, required=False)
 #Debug Options
-parser.add_argument('-D', '--Debug', help='Enable log writing to console', action='store_true', dest='debugMode', required=False)
-parser.add_argument('-l', "--log", dest='log', help="File to write the log to (Default is STDERR)", default=None, required=False)
-parser.add_argument('-v', '--version', help='Outputs the script version to STDOUT', action='store_true', default=False, dest='version', required=False)
+parser.add_argument('-D', '--Debug', help='Enable log writing to console', action='store_true', dest=ARG_DEBUG_DEST, required=False)
+parser.add_argument('-l', "--log", dest=ARG_LOG_DEST, help="File to write the log to (Default is STDERR)", default=None, required=False)
+parser.add_argument('-v', '--version', help='Outputs the script version to STDOUT', action='store_true', default=False, dest=ARG_VERSION_DEST, required=False)
 args = vars(parser.parse_args())
 
 ###################################################################
 # Option: -v
 # Outputs the script's version to STDOUT. Cancels all other options
 ###################################################################
-if args['version']:
+if args[ARG_VERSION_DEST]:
     output(APP_NAME + "-" + VERSION_STRING + "\n")
     exit()
 
@@ -67,17 +73,17 @@ if args['version']:
 # Both options open stderr. -l will write to a file. -D writes
 #   to console. By default, stderr is pointed at /dev/null
 #################################################################
-if not (args['debugMode'] or args['log']):
+if not (args[ARG_DEBUG_DEST] or args[ARG_LOG_DEST]):
     logFile = open('/dev/null', 'w')
 else:
-    if args['log']:
+    if args[ARG_LOG_DEST]:
         try:
-            tryLogFile = open(args['log'], 'w')
+            tryLogFile = open(args[ARG_LOG_DEST], 'w')
             logFile = tryLogFile
         except IOError:
-            log("Error opening file for logging: " + str(args['log']))
+            log("Error opening file for logging: " + str(args[ARG_LOG_DEST]))
 
-    if args['debugMode']:
+    if args[ARG_DEBUG_DEST]:
         log("Debug Mode Enabled")    
 
 log("Program Arguments: " + str(args))
@@ -87,8 +93,8 @@ log("Program Arguments: " + str(args))
 # Handle File Input / stdin
 #
 ###############################
-if args['input'] is not None:
-    inputFile = open(str(args['input']), 'rb')
+if args[ARG_SOURCE_DEST] is not None:
+    inputFile = open(str(args[ARG_SOURCE_DEST]), 'rb')
 else:
     log("No source file exists, using stdin")
 
@@ -97,10 +103,10 @@ else:
 # Handle File Output / stdout
 #
 ###############################
-if args['output'] is not None:
+if args[ARG_DEST_DEST] is not None:
     try:
         log("Destination Exists. Redirecting output to file")
-        outputFile = open(str(args['output']), 'wb')
+        outputFile = open(str(args[ARG_DEST_DEST]), 'wb')
     except IOError:
         log("No destination file exists, using stdout")
 else:
@@ -108,16 +114,21 @@ else:
 
 #######################
 # Option: -xb
-# Perform ASCII to Hex
+# Perform Binary to Hex
 #
 #######################
-if args['hexb'] is True:
+if args[ARG_HEXB_DEST] is True:
         fp = inputFile
         convertedData = binascii.hexlify(fp.read().rstrip())
         output(binascii.hexlify(convertedData))
         log("Converted Binary to Hex")
 
-if args['hex'] is True:
+#######################
+# Option: -x
+# Perform ASCII to Hex
+#
+#######################
+if args[ARG_HEX_DEST] is True:
         data = inputFile.read().rstrip()
         if data.isdigit() is True:
             outputFile.write(str(hex(int(data))))
@@ -134,7 +145,7 @@ if args['hex'] is True:
 # Decompress MAME save state file
 # MAME uses zlib to compress states before writing to disk 
 ###########################################################
-if args['decompress'] is True:
+if args[ARG_DECOMPRESS_DEST] is True:
     log("Decompressing save state")
     stateMan = stateManager.stateManager()
     header, saveData = stateMan.decompressState(inputFile)
@@ -151,7 +162,7 @@ if args['decompress'] is True:
 #   Adds header data, compresses save data, and writes to file
 # 
 #####################################################################
-if args['compress'] is True:
+if args[ARG_COMPRESS_DEST] is True:
     log("Attempting to compress " + inputFile.name)
     stateMan = stateManager.stateManager()
 
@@ -168,16 +179,16 @@ if args['compress'] is True:
 # Compare multiple files for matching offset changes
 #   
 #####################################################################
-if args['compare']:
+if args[ARG_COMPARE_DEST]:
     offsetArray = []
-    log("Attempting to compare " + str(len(args['compare'])) + " files")
-    for f in args['compare']:
+    log("Attempting to compare " + str(len(args[ARG_COMPARE_DEST])) + " files")
+    for f in args[ARG_COMPARE_DEST]:
         stateMan = stateManager.stateManager()
         iVal = raw_input("Integer Value To Find for file <" + f + ">: ")
         ofsts = stateMan.offsetsForValue(f, iVal)
         offsetArray.append(ofsts)
 
-    log("Attempting to compare " + str(len(args['compare'])) + " sets")
+    log("Attempting to compare " + str(len(args[ARG_COMPARE_DEST])) + " sets")
     setOfOffsets = set()
     for s in offsetArray:
         if len(setOfOffsets) == 0:
