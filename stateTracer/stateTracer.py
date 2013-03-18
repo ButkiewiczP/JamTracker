@@ -198,6 +198,6 @@ if args[ARG_COMPARE_DEST]:
 
     log(str(len(setOfOffsets)) + " offsets matched")
     for i in setOfOffsets:
-        output(str(hex(int(i)) + "\n"))
+        output(str(hex(int(i))) + "\n")
 
 log("Finished")

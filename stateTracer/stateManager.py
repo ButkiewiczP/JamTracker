@@ -31,7 +31,7 @@ class stateManager:
                 if index == -1:
                     break
 
-                offsets.append(index)
+                offsets.append((index/2))
                 index += len(hexTarget)
 
         fp.close()
