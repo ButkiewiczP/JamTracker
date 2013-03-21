@@ -3,27 +3,20 @@ JamTracker
 
 Python Script to track NBA Jam stats
 
-This script uses the Python Imaging Library (http://www.pythonware.com/products/pil/)
-to capture screenshots and bitmaps. 
-
-To read screenshots the script uses pytesser, a python implementation of Google's Tesserect OCR engine
-
+This script
 ------------
 Requirements
 ============
 
-This app was built using python 2.7.2
+This script was written using python 2.7.2 and is currently a constant work in progress. 
 
-This app requires you to install 'Python Imaging Library 1.1.7' for Python 2.7. You can acquire this from the PIL website at http://www.pythonware.com/products/pil/ 
-
-Pytesser requires windows to run the tesserect executable, and the PIL to read images.
 
 ------------
 StateTracer
 ============
 
-StateTracer is a python script used to decompress and compress MAME save state files. See the
-readMe in the stateTracer folder for more information
+StateTracer is a python script used to decompress and compress MAME save states. See the
+readme in the stateTracer folder for more information
 
 -------
 License
@@ -31,8 +24,9 @@ License
 
 This code is distributed under the terms and conditions of the MIT license. 
 
-----------
-Change-log
-==========
-
-**Initial Upload** on 02/21/2013
+---------------
+Version History
+===============
+    + 03/21/2013 - Removed old OCR code from the project. Moved to reading memory
+    + 03/14/2013 - Stable build of StateTracer added to project
+    + 02/21/2013 - **Initial Upload**

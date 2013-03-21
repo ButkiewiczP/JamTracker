@@ -98,10 +98,12 @@ License
 
 This code is distributed under the terms and conditions of the MIT license. 
 
-----------
-Change-log
-==========
+----------------
+Version-History
+================
 
+- Version 0.9.9 on 3/21/2013
+    + Small bug fixes.
 - Version 0.6.3 on 3/14/2013
     + A LOT of refactoring!wootwoot
     + Many, many bug fixes

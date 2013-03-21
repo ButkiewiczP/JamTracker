@@ -10,7 +10,7 @@ import sys
 
 # Global Variables
 APP_NAME = 'stateTracer'
-VERSION_STRING = '0.6.3'
+VERSION_STRING = '0.9.9'
 ARG_HEX_DEST = "hex"
 ARG_HEXB_DEST = "hexb"
 ARG_COMPARE_DEST = "compare"
