@@ -36,3 +36,8 @@ nosetests.xml
 
 #log file
 jam.log
+
+#states
+*.sta
+*.dec
+*.hdr

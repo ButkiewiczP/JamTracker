@@ -6,6 +6,7 @@ import os
 import stat
 import stateManager
 import sys
+#import offsets
 
 # Global Variables
 APP_NAME = 'stateTracer'
@@ -58,6 +59,8 @@ parser.add_argument('-D', '--Debug', help='Enable log writing to console', actio
 parser.add_argument('-l', "--log", dest=ARG_LOG_DEST, help="File to write the log to (Default is STDERR)", default=None, required=False)
 parser.add_argument('-v', '--version', help='Outputs the script version to STDOUT', action='store_true', default=False, dest=ARG_VERSION_DEST, required=False)
 args = vars(parser.parse_args())
+
+#print offsets.Player1Points
 
 ###################################################################
 # Option: -v
