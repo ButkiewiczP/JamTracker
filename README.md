@@ -3,13 +3,11 @@ JamTracker
 
 Python Script to track NBA Jam stats
 
-This script
 ------------
 Requirements
 ============
 
 This script was written using python 2.7.2 and is currently a constant work in progress. 
-
 
 ------------
 StateTracer
