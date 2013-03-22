@@ -20,13 +20,13 @@ class JamPlayer:
     if self.fieldGoalsShot == 0:
       return 0
       
-    return (self.fieldGoalsMade/self.fieldGoalsShot)
+    return (self.fieldGoalsMade / self.fieldGoalsShot)
     
   def threePointPercentage(self):
     if self.threePointersShot == 0:
       return 0
       
-    return (self.threePointersMade/self.threePointersShot)
+    return (self.threePointersMade / self.threePointersShot)
     
   def totalShootingPercentage(self):
     totalShotsTaken = self.fieldGoalsShot + self.threePointersShot
