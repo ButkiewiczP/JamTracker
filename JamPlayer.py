@@ -16,6 +16,9 @@ class JamPlayer:
     self.reboundsDefensive = 0
     self.injury = 0
     
+  def pointsScored(self):
+    return ((self.fieldGoalsMade * 2) + (self.threePointersMade * 3))
+
   def fieldGoalPercentage(self):
     if self.fieldGoalsShot == 0:
       return 0
@@ -36,3 +39,16 @@ class JamPlayer:
       return 0
       
     return (totalShotsMade / totalShotsTaken)
+
+  def description(self):
+    print "Player Initials: " + self.initials
+    print "Points: " + str(self.pointsScored())
+    print "Field Goals: " + str(self.fieldGoalsMade) + "/" + str(self.fieldGoalsShot)
+    # print "3 Pointers: " + str(self.threePointersMade) + "/" + str(self.threePointersShot)
+    print "Dunks: " + str(self.dunks)
+    print "Assists: " + str(self.assists)
+    print "Steals: " + str(self.steals)
+    print "Blocks: " + str(self.blocks)
+    # print "Rebounds1: " + str(self.reboundsOffensive)
+    # print "Rebounds2: " + str(self.reboundsDefensive)
+    print "Injury: " + str(self.injury)

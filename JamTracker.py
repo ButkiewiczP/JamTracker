@@ -92,6 +92,5 @@ while (1):
   print jGame.description()
   inputFile.close()
   time.sleep(10)
-  pass
 
 log.warn("Script reached the end. Something probably went wrong")

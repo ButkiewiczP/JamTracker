@@ -10,9 +10,11 @@ class stateManager:
         self.COMPRESSION_LEVEL = 6
 
     def offsetsForValue(self, fileP, targetVal, offset=0):
-        hexTarget = hex(int(targetVal))[2:]
-        #hexAsciiTarget = hex(ord(str(targetVal))) # Not currently used.
-        print hexTarget
+        try:
+            hexTarget = hex(int(targetVal))[2:]
+        except ValueError:
+            hexTarget = binascii.hexlify(targetVal)
+
         # DECISION: Any single 'digit' bytes should be padded with a zero
         if len(hexTarget) < 2:
             hexTarget = "0" + hexTarget    # make sure byte we're looking for is atleast 2 bytes
@@ -39,8 +41,9 @@ class stateManager:
         return offsets
 
     def decompressState(self, fileP):
+        fileP.seek(0,0)
         headerData = fileP.read(self.HEADER_SIZE)
-        sys.stderr.write("State Header: " + headerData + "\n")
+        # sys.stderr.write("State Header: " + headerData + "\n")
 
         for offset, data in self.zipstreams(fileP):
             return headerData, data

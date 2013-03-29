@@ -60,8 +60,6 @@ parser.add_argument('-l', "--log", dest=ARG_LOG_DEST, help="File to write the lo
 parser.add_argument('-v', '--version', help='Outputs the script version to STDOUT', action='store_true', default=False, dest=ARG_VERSION_DEST, required=False)
 args = vars(parser.parse_args())
 
-#print offsets.Player1Points
-
 ###################################################################
 # Option: -v
 # Outputs the script's version to STDOUT. Cancels all other options
@@ -188,6 +186,7 @@ if args[ARG_COMPARE_DEST]:
     for f in args[ARG_COMPARE_DEST]:
         stateMan = stateManager.stateManager()
         iVal = raw_input("Integer Value To Find for file <" + f + ">: ")
+
         ofsts = stateMan.offsetsForValue(f, iVal)
         offsetArray.append(ofsts)
 
