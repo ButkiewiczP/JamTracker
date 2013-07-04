@@ -91,6 +91,10 @@ while (1):
   jGame = jReader.readGameObject() 
   print jGame.description()
   inputFile.close()
-  time.sleep(10)
+  if args[ARG_DEBUG_DEST]:
+    log.debug("Debug mode only runs once")
+    exit();
+  else:
+    time.sleep(10)
 
 log.warn("Script reached the end. Something probably went wrong")
