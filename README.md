@@ -25,6 +25,7 @@ This code is distributed under the terms and conditions of the MIT license.
 ---------------
 Version History
 ===============
+    + 07/04/2013 - All offsets for player's stats now available.
     + 03/21/2013 - Removed old OCR code from the project. Moved to reading memory
     + 03/14/2013 - Stable build of StateTracer added to project
     + 02/21/2013 - **Initial Upload**
