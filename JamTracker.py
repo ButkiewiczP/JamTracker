@@ -79,22 +79,23 @@ if args[ARG_SOURCE_DEST] is not None:
 else:
     log.critical("No save file specified")
     exit()
-
 log.debug("Arguments: " + str(args))
 ##################################################################################
 
+
 jReader = JamReader.JamReader(inputFile, logging.debug)
 jServer = JamServer.JamServer()
-
 utilities.lowerPriority()   # Lower the priority of this script
 inputFile = open(str(args[ARG_SOURCE_DEST]), 'rb')  # Open the file
 getSaveStateMsg = win32api.RegisterWindowMessage(mame.MAME_MESSAGE_GET_SAVE_STATE)
 didSaveStateMsg = win32api.RegisterWindowMessage(mame.MAME_MESSAGE_DID_SAVE_STATE)
+lastSavedGame = ""
 
+# Start running the main loop
 while (1):
   log.debug("Running Main Loop")
 
-  #make sure we have a mame window and we're playing NBA Jam TE
+  # Make sure we have a mame window and we're playing NBA Jam TE
   mameWindow = win32gui.FindWindowEx(0,0,0, mame.MAME_WINDOW_NAME)
   jamWindow = win32gui.FindWindowEx(0,0,0, mame.MAME_WINDOW_NAME_JAM)
   if mameWindow == 0:
@@ -121,7 +122,18 @@ while (1):
 
   # Wait for the game to be over before the next read
   timeToWaitForNextRead = jGame.timeLeftInFullGame()
-  time.sleep(timeToWaitForNextRead)
+
+  if jGame.isComplete() AND jGame != lastSavedGame:
+    log.debug("Saving new game")
+    saved = jServer.addGameToDatabase(jGame)
+    if saved == True:
+      lastSavedGame = jGame
+      log.debug("Saved Jam Game")
+    else:
+      log.debug("Failed to save game: %s", jGame.description())
+  else:
+    sleepTime = mame.MAME_NOT_FOUND_SLEEP_INTERVAL if (timeToWaitForNextRead == 0) else timeToWaitForNextRead
+    time.sleep(sleepTime)
 
 # If we get down here, we somehow broke the infinite loop
 log.warn("Script reached the end. Something probably went wrong")
