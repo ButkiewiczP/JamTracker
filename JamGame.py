@@ -33,3 +33,9 @@ class JamGame:
 
     print "Player 4: "
     print self.playerFour.description()
+    
+  def timeLeftInFullGame(self):
+    return 10
+
+  def timeLeftInQuarter(self):
+    return 5

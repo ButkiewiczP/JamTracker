@@ -11,6 +11,9 @@ import stateTracer.stateManager
 import sys
 import time
 import utilities
+import mame
+
+import win32api, win32gui, win32con, win32file, time 
 
 # Global Variables
 APP_NAME = 'JamTracker'
@@ -19,6 +22,7 @@ ARG_SOURCE_DEST = "source"
 ARG_DEBUG_DEST = "debugMode"
 ARG_LOG_DEST = "log"
 ARG_VERSION_DEST = "version"
+
 #I/O
 inputFile = ""
 #setup logging
@@ -52,7 +56,7 @@ if args[ARG_VERSION_DEST]:
 #   to console. By default, stderr is pointed at /dev/null
 #################################################################
 if not (args[ARG_DEBUG_DEST] or args[ARG_LOG_DEST]):
-    logFile = open('/dev/null', 'w')    # Needs to be modified for windows
+    logFile = open('NUL', 'w')
 else:
     if args[ARG_DEBUG_DEST]:
         log.info("Debug Mode Enabled")
@@ -64,7 +68,6 @@ else:
             logFile = tryLogFile
         except IOError:
             log("Error opening file for logging: " + str(args[ARG_LOG_DEST]))
-
 
 ###############################
 # Option: -s <file>
@@ -83,18 +86,42 @@ log.debug("Arguments: " + str(args))
 jReader = JamReader.JamReader(inputFile, logging.debug)
 jServer = JamServer.JamServer()
 
-utilities.lowerPriority()
+utilities.lowerPriority()   # Lower the priority of this script
+inputFile = open(str(args[ARG_SOURCE_DEST]), 'rb')  # Open the file
+getSaveStateMsg = win32api.RegisterWindowMessage(mame.MAME_MESSAGE_GET_SAVE_STATE)
+didSaveStateMsg = win32api.RegisterWindowMessage(mame.MAME_MESSAGE_DID_SAVE_STATE)
 
 while (1):
-  inputFile = open(str(args[ARG_SOURCE_DEST]), 'rb')
+  log.debug("Running Main Loop")
+
+  #make sure we have a mame window and we're playing NBA Jam TE
+  mameWindow = win32gui.FindWindowEx(0,0,0, mame.MAME_WINDOW_NAME)
+  jamWindow = win32gui.FindWindowEx(0,0,0, mame.MAME_WINDOW_NAME_JAM)
+  if mameWindow == 0:
+    log.debug("Mame window not found. Sleeping %d seconds", mame.MAME_NOT_FOUND_SLEEP_INTERVAL)
+    time.sleep(mame.MAME_NOT_FOUND_SLEEP_INTERVAL)
+    continue
+  if jamWindow == 0:
+    log.debug("NBA Jam window not found. Sleeping %d seconds", mame.MAME_NOT_FOUND_SLEEP_INTERVAL)
+    time.sleep(mame.MAME_NOT_FOUND_SLEEP_INTERVAL)
+    continue
+  
+  # Close the save state file before MAME can write it
+  inputFile.close()
+  
+  # Post the message to MAME to save a new state and briefly wait for write
+  win32api.PostMessage(mameWindow, getSaveStateMsg, 0, 0)
+  time.sleep(0.5)
+  
+  # Open the state file again and read it into jam objects
+  inputFile = open(str(args[ARG_SOURCE_DEST]), 'rb')  # Open the file
   jReader = JamReader.JamReader(inputFile)
   jGame = jReader.readGameObject() 
   print jGame.description()
-  inputFile.close()
-  if args[ARG_DEBUG_DEST]:
-    log.debug("Debug mode only runs once")
-    exit();
-  else:
-    time.sleep(10)
 
+  # Wait for the game to be over before the next read
+  timeToWaitForNextRead = jGame.timeLeftInFullGame()
+  time.sleep(timeToWaitForNextRead)
+
+# If we get down here, we somehow broke the infinite loop
 log.warn("Script reached the end. Something probably went wrong")
